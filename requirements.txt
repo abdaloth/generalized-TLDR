@@ -1,0 +1,4 @@
+nltk
+black
+sklearn
+networkx
