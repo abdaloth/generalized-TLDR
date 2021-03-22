@@ -1,5 +1,6 @@
 setup:
 	python3 -m venv ~/.venv
+	source env/bin/activate
 
 install:
 	pip install --upgrade pip &&\
