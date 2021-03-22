@@ -1,10 +1,9 @@
 setup:
-	python3 -m venv ~/.venv
-	source env/bin/activate
+	python3 -m venv ~/.tldr-venv
 
 install:
-	pip install --upgrade pip &&\
-		pip install -r requirements.txt
+	pip3 install --upgrade pip &&\
+		pip3 install -r requirements.txt
 
 lint:
 	black *.py
