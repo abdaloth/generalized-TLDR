@@ -5,26 +5,21 @@ from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 import nltk
 
 nltk.download("stopwords")
+nltk.download("punkt")
+lang_stopwords = []
 
-
-from nltk.stem.snowball import SnowballStemmer
-from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 import networkx as nx
 import re
 
-# retrieve command line arguments and store them as variables
-inputdir = sys.argv[1]
-lang = sys.argv[2]
-outputdir = sys.argv[3]
-
-
 def sentence_stem(sentence, lang):
     """ takes article text and language as inputs, returns a list of stemmed sentences"""
+    from nltk.stem.snowball import SnowballStemmer
+
     word_arr = [
         SnowballStemmer(lang).stem(word)
         for word in sentence.strip().split()
-        if not (word in stopwords.words(lang))
+        if not (word in lang_stopwords)
     ]
     stemmed_sentence = " ".join(word_arr)
     return stemmed_sentence
@@ -57,10 +52,15 @@ def summarize(article, lang, num_sentences):
 
 
 if __name__ == "__main__":
-    import pyspark
+    # retrieve command line arguments and store them as variables
+    inputdir = sys.argv[1]
+    lang = sys.argv[2]
+    outfile = sys.argv[3]
 
+    import pyspark
+    from nltk.corpus import stopwords
+    lang_stopwords = stopwords.words(lang)
     sc = pyspark.SparkContext()
-    rdd = sc.textFile(inputdir)
-    summaries = rdd.map(lambda x: summarize(x, lang, 5)).collect()
-    with open("{}/out.txt" "w") as f:
-        f.write("\n-----\n").join(summaries)
+    rdd = sc.wholeTextFiles(inputdir)
+    summaries = rdd.map(lambda x: summarize(x[1], lang, 3))
+    summaries.saveAsTextFile(outfile)
