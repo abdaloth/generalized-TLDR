@@ -1,9 +1,22 @@
+#!/usr/bin/python
+import sys
+import pyspark
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
+
+import nltk
+nltk.download('stopwords')
+
+
 from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 import networkx as nx
 import re
+
+# retrieve command line arguments and store them as variables
+inputdir = sys.argv[1]
+lang = sys.argv[2]
+outputdir = sys.argv[3]
 
 
 def sentence_stem(sentence, lang):
@@ -41,3 +54,10 @@ def summarize(article, lang, num_sentences):
     """ takes article text, language, and number of sentences as inputs, returns summarized article limited to the number of sentences"""
     summary = tldr_matrix(article, lang)[:num_sentences]
     return "\n".join([_[1] for _ in sorted(summary, key=lambda x: x[0])])
+
+if __name__ == "__main__":
+    sc = pyspark.SparkContext()
+    rdd = sc.textFile(inputdir)
+    summaries = rdd.map(lambda x: summarize(x, lang, 5)).collect()
+    with open("{}/out.txt" 'w') as f:
+        f.write('\n-----\n').join(summaries)
