@@ -16,5 +16,5 @@ gcloud dataproc clusters create ${MYCLUSTER} \
 ## submit spark job
 
 ```
-gcloud dataproc jobs submit pyspark --cluster ${MYCLUSTER} summarize.py -- gs://${MYBUCKET}/articles/ english gs://${MYBUCKET}/summaries/out.txt
+gcloud dataproc jobs submit pyspark --cluster ${MYCLUSTER} summarize.py -- gs://${MYBUCKET}/articles/ english gs://${MYBUCKET}/summaries/
 ```
