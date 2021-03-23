@@ -16,7 +16,8 @@ import re
 def sentence_stem(sentence, lang):
     """ takes article text and language as inputs, returns a list of stemmed sentences"""
     from nltk.stem.snowball import SnowballStemmer
-
+    if len(lang_stopwords) == 0:
+        lang_stopwords = stopwords.words(lang)
     word_arr = [
         SnowballStemmer(lang).stem(word)
         for word in sentence.strip().split()
