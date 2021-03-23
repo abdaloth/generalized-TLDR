@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import sys
-import pyspark
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 
 import nltk
-nltk.download('stopwords')
+
+nltk.download("stopwords")
 
 
 from nltk.stem.snowball import SnowballStemmer
@@ -55,9 +55,12 @@ def summarize(article, lang, num_sentences):
     summary = tldr_matrix(article, lang)[:num_sentences]
     return "\n".join([_[1] for _ in sorted(summary, key=lambda x: x[0])])
 
+
 if __name__ == "__main__":
+    import pyspark
+
     sc = pyspark.SparkContext()
     rdd = sc.textFile(inputdir)
     summaries = rdd.map(lambda x: summarize(x, lang, 5)).collect()
-    with open("{}/out.txt" 'w') as f:
-        f.write('\n-----\n').join(summaries)
+    with open("{}/out.txt" "w") as f:
+        f.write("\n-----\n").join(summaries)
