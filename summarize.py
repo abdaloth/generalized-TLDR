@@ -12,6 +12,7 @@ from nltk.tokenize import sent_tokenize
 import networkx as nx
 import re
 
+
 def sentence_stem(sentence, lang):
     """ takes article text and language as inputs, returns a list of stemmed sentences"""
     from nltk.stem.snowball import SnowballStemmer
@@ -59,6 +60,7 @@ if __name__ == "__main__":
 
     import pyspark
     from nltk.corpus import stopwords
+
     lang_stopwords = stopwords.words(lang)
     sc = pyspark.SparkContext()
     rdd = sc.wholeTextFiles(inputdir)
